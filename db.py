@@ -1,5 +1,6 @@
 # Configurar o engine e criar as tabelas
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
 from persistence.data_definition import metadata
 
@@ -10,3 +11,18 @@ engine = create_engine(DATABASE_URL)
 metadata.create_all(engine)
 
 print("Tabelas criadas com sucesso!")
+
+# Configurar o sessionmaker para criar sessões
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+# Função para obter uma nova sessão
+def get_db():
+    """
+    Dependência para obter uma sessão do banco de dados.
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

@@ -1,21 +1,27 @@
-from typing import Union
-
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+
+from routes import clients, products, orders, budget
 
 app = FastAPI()
 
+origins = ['*']
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-@app.post("/cadastrar_produto/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
+app.include_router(clients.router)
+app.include_router(products.router)
+app.include_router(orders.router)
+app.include_router(budget.router)
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=7894)
+    uvicorn.run('main:app', host="127.0.0.1", port=7894)
