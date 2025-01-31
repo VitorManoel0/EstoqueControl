@@ -29,9 +29,9 @@ def delete_budget(id_, db: Session = Depends(get_db)):
     apagar_orcamento(id_, db)
 
 
-@router.patch('/update_budget/{id_}')
-def update_budget(id_, status: str = 'aguardando', db: Session = Depends(get_db)):
-    update_orcamento(id_, status, db)
+@router.put('/update_budget/{id_}')
+def update_budget(id_,order_input: OrderInput, db: Session = Depends(get_db)):
+    update_orcamento(id_, order_input, db)
 
 
 @router.post('/export_pdf/{id_}')

@@ -93,9 +93,9 @@ def apagar_orcamento(id, db):
     db.commit()
 
 
-def update_orcamento(id, status, db):
+def update_orcamento(id, order_input, db):
     # Exclui os pedidos relacionados
-    db.execute(update(t_orders).where(t_orders.c.id == id).values(status=status))
+    db.execute(update(t_orders).where(t_orders.c.id == id).values(status=order_input.status, client_id=order_input.client_id, ))
 
     db.commit()
 
@@ -135,13 +135,13 @@ def get_pedidos(db, query):
 
         cliente = get_cliente(pedido.cliente_id, db)
 
-        a = {
+        response = {
             'pedido': Budget(items=products, clientName=cliente.nome, id=id_),
             'valor': valor_total,
             'statusEntrega': pedido.status_entrega,
             'statusPagamento': pedido.status_pagamento
         }
 
-        pedidos.append(a)
+        pedidos.append(response)
 
     return pedidos

@@ -55,8 +55,18 @@ def listar_produto(db):
 
 
 def total_products_on_request(id_, db):
-    total = db.execute(
-        select(func.sum(t_order_items.c.quantidade)).where(t_order_items.c.produto_id == id_)).scalar()
+    orcamentos_ids = db.execute(
+        select(t_orders.c.id).where(t_orders.c.status == 'orcamento')).scalars().all()
+
+    query = select(func.sum(t_order_items.c.quantidade)).where(
+        t_order_items.c.produto_id == id_
+    )
+
+    if orcamentos_ids:
+        query = query.where(t_order_items.c.pedido_id.not_in(orcamentos_ids))
+
+    total = db.execute(query).scalar() or 0
+
 
     total = total or 0
 

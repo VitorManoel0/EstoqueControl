@@ -10,6 +10,7 @@ from CRUD.customers import get_cliente
 from CRUD.products import get_product
 from models.ProductsModels import Clientes, Pedidos, ItensPedidos
 from persistence.data_definition import t_orders, t_order_items
+from utils import formatar_telefone
 
 
 def get_data(id_, db):
@@ -34,7 +35,7 @@ def get_data(id_, db):
 
         products.append([item.quantidade, product.descricao, f"R$ {round(item.preco_unitario, 2)}",
                          f"R$ {round(product.reposicao, 2)}",
-                         f"R$ {round(product.reposicao, 2)}"
+                         f"R$ {round(item.preco_unitario * item.quantidade, 2)}"
                          ])
 
     products.append(["", "", "", "", f"R$: {round(valor_total, 2)}"])
@@ -73,7 +74,7 @@ def generate_pdf(file_name, logo_path, id_, db):
     pdf.drawText(text_object)
 
     pdf.drawString(100, height - 330, f"CONTRATANTE: {cliente.nome}")
-    pdf.drawString(390, height - 330, f"TELEFONE: {cliente.telefone}")
+    pdf.drawString(390, height - 330, f"TELEFONE: {formatar_telefone(cliente.telefone)}")
 
     pdf.drawString(100, height - 365, f"END. ENTREGA: {pedido.end_entrega}")
 
