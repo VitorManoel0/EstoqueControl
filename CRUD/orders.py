@@ -74,13 +74,13 @@ def listar_order(db):
 
 
 def listar_orcamento(db):
-    query = select(t_orders.c.id).where(t_orders.c.status == 'orcamento')
+    query = select(t_orders.c.id).where(t_orders.c.status == 'ORCAMENTO')
 
     return get_pedidos(db, query)
 
 
 def listar_pedido(db):
-    query = select(t_orders.c.id).where(t_orders.c.status != 'orcamento')
+    query = select(t_orders.c.id).where(t_orders.c.status != 'ORCAMENTO')
 
     return get_pedidos(db, query)
 

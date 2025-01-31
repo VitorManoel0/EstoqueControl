@@ -12,7 +12,7 @@ router = APIRouter(tags=["Orçamento"])
 
 @router.post("/create_budget")
 def cadastrar_orcamentos(order_input: OrderInput, db: Session = Depends(get_db)):
-    order_input.status = 'orcamento'
+    order_input.status = 'ORCAMENTO'
 
     cadastrar_pedido(order_input, db)
     return {"message": f"Pedido cadastrado com sucesso!"}

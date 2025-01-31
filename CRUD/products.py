@@ -56,7 +56,7 @@ def listar_produto(db):
 
 def total_products_on_request(id_, db):
     orcamentos_ids = db.execute(
-        select(t_orders.c.id).where(t_orders.c.status == 'orcamento')).scalars().all()
+        select(t_orders.c.id).where(t_orders.c.status == 'ORCAMENTO' or t_orders.c.status_entrega == 'RETIRADO')).scalars().all()
 
     query = select(func.sum(t_order_items.c.quantidade)).where(
         t_order_items.c.produto_id == id_
