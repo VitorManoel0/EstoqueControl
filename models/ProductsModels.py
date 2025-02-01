@@ -53,7 +53,7 @@ class OrderInput(BaseModel):
     items: List[Produto]
     status: str = "Aguardando"
     client_id: str
-    end_entrega: str = ''
+    end_entrega: str = ""
     data_entrega: datetime.datetime = datetime.datetime.now()
     data_retirada: datetime.datetime = datetime.datetime.now()
 

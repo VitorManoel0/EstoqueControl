@@ -5,7 +5,7 @@ from routes import clients, products, orders, budget
 
 app = FastAPI()
 
-origins = ['*']
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,4 +24,4 @@ app.include_router(budget.router)
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run('main:app', host="127.0.0.1", port=7894)
+    uvicorn.run("main:app", host="127.0.0.1", port=7894)

@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from persistence.data_definition import metadata
 
-DATABASE_URL = 'sqlite:///mydatabase.db'  # Troque 'sqlite' pelo SGBD de sua preferência
+DATABASE_URL = "sqlite:///mydatabase.db"  # Troque 'sqlite' pelo SGBD de sua preferência
 engine = create_engine(DATABASE_URL)
 
 # Criar todas as tabelas no banco de dados

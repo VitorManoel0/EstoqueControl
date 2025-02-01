@@ -14,7 +14,9 @@ from utils import formatar_telefone
 
 
 def get_data(id_, db):
-    dict_ = dict(db.execute(select(t_orders).where(t_orders.c.id == id_)).first()._mapping)
+    dict_ = dict(
+        db.execute(select(t_orders).where(t_orders.c.id == id_)).first()._mapping
+    )
 
     pedido = Pedidos(**dict_)
 
@@ -22,7 +24,9 @@ def get_data(id_, db):
 
     products = []
 
-    items = db.execute(select(t_order_items).where(t_order_items.c.pedido_id == id_)).fetchall()
+    items = db.execute(
+        select(t_order_items).where(t_order_items.c.pedido_id == id_)
+    ).fetchall()
 
     result_ = [ItensPedidos(**dict(item._mapping)) for item in items]
 
@@ -33,10 +37,15 @@ def get_data(id_, db):
 
         product = get_product(item.produto_id, db)
 
-        products.append([item.quantidade, product.descricao, f"R$ {round(item.preco_unitario, 2)}",
-                         f"R$ {round(product.reposicao, 2)}",
-                         f"R$ {round(item.preco_unitario * item.quantidade, 2)}"
-                         ])
+        products.append(
+            [
+                item.quantidade,
+                product.descricao,
+                f"R$ {round(item.preco_unitario, 2)}",
+                f"R$ {round(product.reposicao, 2)}",
+                f"R$ {round(item.preco_unitario * item.quantidade, 2)}",
+            ]
+        )
 
     products.append(["", "", "", "", f"R$: {round(valor_total, 2)}"])
 
@@ -74,15 +83,25 @@ def generate_pdf(file_name, logo_path, id_, db):
     pdf.drawText(text_object)
 
     pdf.drawString(100, height - 330, f"CONTRATANTE: {cliente.nome}")
-    pdf.drawString(390, height - 330, f"TELEFONE: {formatar_telefone(cliente.telefone)}")
+    pdf.drawString(
+        390, height - 330, f"TELEFONE: {formatar_telefone(cliente.telefone)}"
+    )
 
     pdf.drawString(100, height - 365, f"END. ENTREGA: {pedido.end_entrega}")
 
-    pdf.drawString(100, height - 400, f"DATA ENTREGA: {pedido.data_entrega.strftime('%d/%m/%Y')}")
-    pdf.drawString(390, height - 400, f"DATA RETIRADA: {pedido.data_retirada.strftime('%d/%m/%Y')}")
+    pdf.drawString(
+        100, height - 400, f"DATA ENTREGA: {pedido.data_entrega.strftime('%d/%m/%Y')}"
+    )
+    pdf.drawString(
+        390, height - 400, f"DATA RETIRADA: {pedido.data_retirada.strftime('%d/%m/%Y')}"
+    )
 
-    pdf.drawString(260, height - 735, f"ATENÇÃO")
-    pdf.drawString(80, height - 750, f"1. AS ENTREGAS E RETIRADAS SÃO FEITAS APENAS EM HORÁRIO COMERCIAL")
+    pdf.drawString(260, height - 735, "ATENÇÃO")
+    pdf.drawString(
+        80,
+        height - 750,
+        "1. AS ENTREGAS E RETIRADAS SÃO FEITAS APENAS EM HORÁRIO COMERCIAL",
+    )
 
     cabecalho = ["QTD.", "DESCRIÇÃO", "PREÇO UN.", "REP. UN.", "TOTAL"]
 
@@ -93,23 +112,64 @@ def generate_pdf(file_name, logo_path, id_, db):
 
     table = Table(data, colWidths=col_widths)
 
-    style = TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgoldenrodyellow),  # Fundo cinza no cabeçalho
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),  # Texto branco no cabeçalho
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Alinhamento centralizado
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Fonte negrito no cabeçalho
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Espaçamento inferior no cabeçalho
-        ('BACKGROUND', (0, 1), (-1, -1), colors.white),  # Fundo bege nas linhas
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Grade com linhas pretas
-
-        # Estilo específico para a última linha
-        ('SPAN', (0, -1), (-2, -1)),  # Mesclar células da última linha (exceto a última coluna)
-        ('ALIGN', (-1, -1), (-1, -1), 'RIGHT'),  # Alinhar à direita o valor da última coluna
-        ('FONTNAME', (-1, -1), (-1, -1), 'Helvetica-Bold'),  # Fonte negrito na última coluna
-        ('TEXTCOLOR', (-1, -1), (-1, -1), colors.black),  # Texto preto na última coluna
-        ('BACKGROUND', (0, -1), (-1, -1), colors.beige),  # Fundo branco na última linha
-        ('LINEBELOW', (0, -2), (-1, -2), 1, colors.black),  # Linha inferior antes do total
-    ])
+    style = TableStyle(
+        [
+            (
+                "BACKGROUND",
+                (0, 0),
+                (-1, 0),
+                colors.lightgoldenrodyellow,
+            ),  # Fundo cinza no cabeçalho
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),  # Texto branco no cabeçalho
+            ("ALIGN", (0, 0), (-1, -1), "CENTER"),  # Alinhamento centralizado
+            (
+                "FONTNAME",
+                (0, 0),
+                (-1, 0),
+                "Helvetica-Bold",
+            ),  # Fonte negrito no cabeçalho
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 12),  # Espaçamento inferior no cabeçalho
+            ("BACKGROUND", (0, 1), (-1, -1), colors.white),  # Fundo bege nas linhas
+            ("GRID", (0, 0), (-1, -1), 1, colors.black),  # Grade com linhas pretas
+            # Estilo específico para a última linha
+            (
+                "SPAN",
+                (0, -1),
+                (-2, -1),
+            ),  # Mesclar células da última linha (exceto a última coluna)
+            (
+                "ALIGN",
+                (-1, -1),
+                (-1, -1),
+                "RIGHT",
+            ),  # Alinhar à direita o valor da última coluna
+            (
+                "FONTNAME",
+                (-1, -1),
+                (-1, -1),
+                "Helvetica-Bold",
+            ),  # Fonte negrito na última coluna
+            (
+                "TEXTCOLOR",
+                (-1, -1),
+                (-1, -1),
+                colors.black,
+            ),  # Texto preto na última coluna
+            (
+                "BACKGROUND",
+                (0, -1),
+                (-1, -1),
+                colors.beige,
+            ),  # Fundo branco na última linha
+            (
+                "LINEBELOW",
+                (0, -2),
+                (-1, -2),
+                1,
+                colors.black,
+            ),  # Linha inferior antes do total
+        ]
+    )
 
     table.setStyle(style)
 
@@ -131,7 +191,7 @@ def generate_pdf(file_name, logo_path, id_, db):
     print(f"PDF '{file_name}' criado com sucesso!")
 
 
-string_ = f"""A CONTRATADA, MEIRE E PINHO BUFFET E LOCADORA, razão social R.R.BATISTA LOCADORA LTDA., 
+string_ = """A CONTRATADA, MEIRE E PINHO BUFFET E LOCADORA, razão social R.R.BATISTA LOCADORA LTDA., 
     CNPJ nº 12.106.567/0001-26, ora representada por ROSIMEIRE RODRIGUES BATISTA, brasileira, casada, autônoma, portadora da 
     Cédula de Identidade – RG nº 989255 SSP MT, e inscrita no CPF nº 652.222.881-53 MF, residente à Rua Lucinópolis, nº 16, 
     Bairro Coophema, Cuiabá/MT, receberá o pagamento via PIX para a conta bancária do Beneficiário, que possui os seguintes 
