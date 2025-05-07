@@ -34,8 +34,8 @@ def listar_cliente(db):
                 "id": row[0],
                 "nome": row[1],
                 "cpf_cnpj": row[2],
-                "email": row[3],
-                "telefone": row[4],
+                "email": row[4],
+                "telefone": row[3],
             }
         )
         for row in result
