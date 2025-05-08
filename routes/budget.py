@@ -7,6 +7,7 @@ from CRUD.orders import (
     apagar_orcamento,
     listar_orcamento,
     update_orcamento,
+    change_budget_in_order_status,
 )
 from CRUD.pdf import generate_pdf
 from db import get_db
@@ -37,6 +38,11 @@ def delete_budget(id_, db: Session = Depends(get_db)):
 @router.put("/update_budget/{id_}")
 def update_budget(id_, order_input: OrderInput, db: Session = Depends(get_db)):
     update_orcamento(id_, order_input, db)
+
+
+@router.put("/change_budget_in_order/{id_}")
+def change_budget_in_order(id_, status: str, db: Session = Depends(get_db)):
+    change_budget_in_order_status(id_, status, db)
 
 
 @router.post("/export_pdf/{id_}")

@@ -120,6 +120,19 @@ def update_orcamento(id, order_input, db):
     db.commit()
 
 
+def change_budget_in_order_status(id, status, db):
+    # Exclui os pedidos relacionados
+    db.execute(
+        update(t_orders)
+        .where(t_orders.c.id == id)
+        .values(
+            status=status,
+        )
+    )
+
+    db.commit()
+
+
 def update_orcamento_status(id, update_pedido, db):
     # Exclui os pedidos relacionados
     if update_pedido.statusPagamento:
