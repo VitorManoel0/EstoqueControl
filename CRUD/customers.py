@@ -5,7 +5,7 @@ from persistence.data_definition import t_customers
 
 
 def cadastrar_cliente(cliente, db):
-    db.execute(t_customers.insert().values(**cliente.__dict__))
+    db.execute(t_customers.insert().values(**cliente.model_dump(exclude='id')))
     db.commit()
 
     return cliente.__dict__
