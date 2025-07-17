@@ -5,7 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
 from persistence.data_definition import metadata
 import time
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def create_database_engine():
     """
