@@ -35,7 +35,7 @@ def editar_produto(id, produto, db):
 
 
 def listar_produto(db):
-    query = select(t_products)
+    query = select(t_products).order_by(t_products.c.nome)
 
     # Executa o SELECT para listar os produtos
     result = db.execute(query).fetchall()
